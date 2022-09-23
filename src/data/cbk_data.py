@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import numpy as np
 import xml.etree.ElementTree as ET
 
 
@@ -84,3 +85,15 @@ class api_call:
         self.df.loc[:, "var"] = self.var_name
         self.df.loc[:, "type"] = self.type_exc
         return self.df
+
+
+def xm_notacc(df):
+    """
+    Fun to convert the data to not accumulative by year-month
+    """
+    df.loc[:, "value_lag"] = df.groupby("year")["value"].shift()
+    df.loc[:, "value_lag"] = df.loc[:, "value_lag"].replace({np.nan: 0})
+    df.loc[:, "valnotacc"] = df.loc[:, "value"] - df.loc[:, "value_lag"]
+    df = (df.drop(["value_lag", "value"], axis=1)
+            .rename(columns={"valnotacc"  : "value"}))
+    return df
