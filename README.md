@@ -5,6 +5,7 @@ This project was designed to be able to generate a forecast Costa Rica's exports
 The code is available publicly and a it respective API too. THe production model was executed using Amazon SageMaker and the API with Lambda and API Gateway.
 A diagram of the arquitecture is showed:
 
+![diagram](diagram/diagram.png)
 
 To/do list:
 
