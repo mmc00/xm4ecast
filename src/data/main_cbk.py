@@ -8,7 +8,7 @@ import cbk_data
 from pathlib import Path
 
 
-def api_fun(
+def main(
     url: str = "https://gee.bccr.fi.cr/Indicadores/Suscripciones/WS/wsindicadoreseconomicos.asmx/ObtenerIndicadoresEconomicos?",
     start_time="01/01/1980",
     end_time=time.strftime("%d/%m/%Y"),
@@ -83,4 +83,5 @@ def api_fun(
         data2save.to_csv(e, index=False)
 
 
-api_fun()
+if __name__ == "__main__":
+    main()
