@@ -27,11 +27,12 @@ RUN conda update -y conda
 ARG PY_VER
 ### install packages from conda and downgrade py (optional).
 RUN conda install -c anaconda -y python=${PY_VER}
-RUN pip install numpy==1.20.3 && pip install pandas==1.3.4 && pip install requests==2.26.0
+RUN pip install numpy==1.20.3 && pip install pandas==1.3.4 && pip install requests==2.26.0 && \
+    pip install lxml==4.6.3
 
 ### copy the files
 COPY cbk_data.py ./
 COPY main_cbk.py ./
 
 ### running the files
-CMD ["python",  "./main_cbk.py"]
+CMD ["python",  "main_cbk.py"]

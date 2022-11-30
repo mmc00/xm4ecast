@@ -74,7 +74,7 @@ def main(
 
     ### saving as CSV
     data2save = pd.concat(api_varscall, ignore_index=True)
-    outpath = Path("raw_cbk.csv")
+    outpath = Path("raw_cbk" + time.strftime("%d_%m_%Y") + ".csv")
     with outpath as e:
         data2save.to_csv(e, index=False)
 
