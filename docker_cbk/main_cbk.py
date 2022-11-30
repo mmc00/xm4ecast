@@ -77,7 +77,7 @@ def main_cbk(
 
     ### saving as CSV
     data2save = pd.concat(api_varscall, ignore_index=True)
-    outpath = Path("raw_cbk" + time.strftime("%d_%m_%Y") + ".csv")
+    outpath = Path("raw_cbk" + "_" + time.strftime("%d_%m_%Y") + ".csv")
     with outpath as e:
         data2save.to_csv(e, index=False)
 
@@ -115,19 +115,19 @@ def main_fred(
 
     ### getting the data
     data_fred = {}
-    for k, v in codes_vars.items():
+    for k, v in code_vars.items():
         print(f"getting the variable: {k}")
         data_fred[k] = fred.get_series(v)
 
     ## doing the call
     data_fred_clean = {}
-    for k, v in codes_vars.items():
+    for k, v in code_vars.items():
         print(f"cleaning data for variable: {k}")
         data_fred_clean[k] = fred_data.cleaning_fred(ds=data_fred[k], var_name=k)
 
     ### saving as csv
     raw_fred = pd.concat(data_fred_clean, axis=0, ignore_index=True)
-    outpath = Path("raw_fred" + time.strftime("%d_%m_%Y") + ".csv")
+    outpath = Path("raw_fred" + "_" time.strftime("%d_%m_%Y") + ".csv")
     with outpath as e:
         raw_fred.to_csv(e, index=False)
 

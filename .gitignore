@@ -2,3 +2,4 @@ env/*
 notebooks/bccr.xml
 data/*
 src/data/__pycache__
+docker_cbk/__pycache__/*
