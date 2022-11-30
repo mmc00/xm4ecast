@@ -28,10 +28,11 @@ ARG PY_VER
 ### install packages from conda and downgrade py (optional).
 RUN conda install -c anaconda -y python=${PY_VER}
 RUN pip install numpy==1.20.3 && pip install pandas==1.3.4 && pip install requests==2.26.0 && \
-    pip install lxml==4.6.3
+    pip install lxml==4.6.3 && pip install fredapi==0.5.0
 
 ### copy the files
 COPY cbk_data.py ./
+COPY fred_data.py ./
 COPY main_cbk.py ./
 
 ### running the files

@@ -2,10 +2,12 @@ import os
 import pandas as pd
 import time
 import cbk_data
+import fred_data
 from pathlib import Path
+from fredapi import Fred
 
 
-def main(
+def main_cbk(
     start_time="01/01/1980",
     end_time=time.strftime("%d/%m/%Y"),
     params_bccr: dict = None,
@@ -55,6 +57,7 @@ def main(
     ### running the code for each variable
     api_varscall = {}
     for k, v in code_vars.items():
+        print(f"running loop for variable: {k}")
         api_varscall[k] = cbk_data.api_call(
             var_code=v,
             start_date=start_time,
@@ -79,5 +82,56 @@ def main(
         data2save.to_csv(e, index=False)
 
 
+def main_fred(
+    code_vars: dict = None, start_time="01/01/1980", end_time=time.strftime("%d/%m/%Y")
+):
+    ### checking code_vars variable
+    if code_vars is None:
+        code_vars = {
+            "crude_oil_wti": "DCOILWTICO",
+            "crude_oil_brent": "DCOILBRENTEU",
+            "gas_henry_hub": "DHHNGSP",
+            "nominal_broad_usdollar": "DTWEXBGS",
+            "yuan_dollar_spot_tc": "DEXCHUS",
+            "usdollar_euro": "DEXUSEU",
+            "treasury3month": "DTB3",
+            "treasury1year": "DTB1YR",
+            "treasury4week": "DTB4WK",
+            "treasury6month": "DTB6",
+            "chn_x": "XTEXVA01CNM667S",
+            "chn_m": "XTIMVA01CNM667S",
+            "ue_x": "XTEXVA01EZM667S",
+            "ue_m": "XTIMVA01EZM667S",
+            "usa_x": "BOPTEXP",
+            "usa_m": "BOPTIMP",
+        }
+    else:
+        if isinstance(code_vars, dict):
+            print("Using a custom code_vars dictionary")
+        else:
+            raise Exception("The parameter code_vars is not a dictionary")
+    ### access to fred API
+    fred = Fred(os.getenv("API_FED"))
+
+    ### getting the data
+    data_fred = {}
+    for k, v in codes_vars.items():
+        print(f"getting the variable: {k}")
+        data_fred[k] = fred.get_series(v)
+
+    ## doing the call
+    data_fred_clean = {}
+    for k, v in codes_vars.items():
+        print(f"cleaning data for variable: {k}")
+        data_fred_clean[k] = fred_data.cleaning_fred(ds=data_fred[k], var_name=k)
+
+    ### saving as csv
+    raw_fred = pd.concat(data_fred_clean, axis=0, ignore_index=True)
+    outpath = Path("raw_fred" + time.strftime("%d_%m_%Y") + ".csv")
+    with outpath as e:
+        raw_fred.to_csv(e, index=False)
+
+
 if __name__ == "__main__":
-    main()
+    main_cbk()
+    main_fred()
